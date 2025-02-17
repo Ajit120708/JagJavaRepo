@@ -47,12 +47,38 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
-    - task: CopyFiles@2
-      inputs:
-        Contents: 'aks-deploy-from-acr.yaml'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)'
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'drop'
-        publishLocation: 'Container'
+
+    - upload: manifests
+      artifact: manifests
+
+- stage: Deploy
+  displayName: Deploy stage
+  dependsOn: Build
+
+  jobs:
+    - deployment: Deploy
+      displayName: Deploy
+      pool:
+        vmImage: $(vmImageName)
+      environment: 'Ajit120708JagJavaRepo.default'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - task: KubernetesManifest@1
+              displayName: Create imagePullSecret
+              inputs:
+                action: createSecret
+                secretName: $(imagePullSecret)
+                dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
+
+            - task: KubernetesManifest@1
+              displayName: Deploy to Kubernetes cluster
+              inputs:
+                action: deploy
+                manifests: |
+                  $(Pipeline.Workspace)/manifests/aks-deploy-from-acr.yaml
+                imagePullSecrets: |
+                  $(imagePullSecret)
+                containers: |
+                  $(containerRegistry)/$(imageRepository):$(tag)
