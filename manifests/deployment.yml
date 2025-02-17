@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: jagdevorgazurespringbootpoc 
-          image: mydemoacrrepo001.azurecr.io/Ajit120708/dockerspringbootpocnew:#{Build.BuildId}#
+          image: mydemoacrrepo001.azurecr.io/Ajit120708/dockerspringbootpocnew:27
           ports:
           - containerPort: 8080
