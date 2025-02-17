@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: my-springboot-app
-        image: mydemoacrrepo001.azurecr.io/Ajit120708/dockerspringbootpocnew:27
+        image: mydemoacrrepo001.azurecr.io/ajitjagjavarepo:33
         imagePullPolicy: Always
         ports:
         - containerPort: 8085
