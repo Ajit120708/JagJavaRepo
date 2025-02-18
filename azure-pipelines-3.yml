@@ -15,6 +15,7 @@ variables:
   containerRegistry: 'mydemoacrrepo001.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'
+  imagePullSecret: 'mydemoacrrepo001-auth'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
